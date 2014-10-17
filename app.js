@@ -2,7 +2,6 @@ var express     = require('express');
 var path        = require('path');
 var http        = require('http');
 var socketio    = require('socket.io');
-//var randomColor = require("./library/randomColor.js");
 
 var app        = express();
 var httpServer = http.Server(app);
@@ -19,21 +18,32 @@ app.get('/', function(req, res){
 /* * * * * * * * * * * * * * * * * * * * * * */
 
 var playerList = [];
-
 io.on("connection", function(socket){
    console.log("User Connected", socket.id);
-	
-   socket.on("sign in", function(data) {
    
+   socket.on("sign in", function(data) {
       var newPlayer = {
 		 id: socket.id,
          name: data.name
       }
-	
-      socket.emit("sign in reply", {player: newPlayer, list: playerList});
+	  
+	  if( playerList.length < 1) { isAdmin = true; } else { isAdmin = false; }
+	  
+      socket.emit("sign in reply", {admin: isAdmin, player: newPlayer});
       socket.broadcast.emit("new user", newPlayer);
-
       playerList.push(newPlayer);
+   });
+   socket.on("adminLogin", function() {
+		socket.emit('adminLogin reply', {list: playerList});
+   });
+   
+   socket.on("getMyInfo", function(user) {
+		for(var i = 0; i < playerList.length; i++) {
+		   if(playerList[i].name === user.name) {
+			 var thisPlayer = playerList[i];
+		   }
+		}
+		socket.emit("getMyInfo reply", {list: playerList, player: thisPlayer });
    });
 })
 
@@ -54,5 +64,5 @@ app.use(mainRoutes);
 /* * * * * * * * * * * * * * * * * * * * * * */
 
 httpServer.listen(3000, function(){
-   console.log("Server running on port 3000.");
+   console.log("Server running on port 3000!");
 });

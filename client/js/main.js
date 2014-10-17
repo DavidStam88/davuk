@@ -2,16 +2,24 @@ var app = angular.module("SockBlocksApp",["ngRoute"]);
 
 app.config( function($routeProvider) {
       $routeProvider.
-          when('/name', {
-              templateUrl: '/templates/nameForm.html',
-              controller: 'nameFormController'
+          when('/login', {
+              templateUrl: '/templates/loginForm.html',
+              controller: 'loginFormController'
           }).
-          when('/blocks/:name', {
-              templateUrl: '/templates/blocks.html',
-              controller: 'blocksController'
+		  when('/config/:name', {
+			  templateUrl: '/templates/loginForm.html',
+              controller: 'configController'
+          }).
+		  when('/adminPanel', {
+              templateUrl: '/templates/adminPanel.html',
+              controller: 'adminPanelController'
+          }).
+		  when('/game/:name', {
+			  templateUrl: '/templates/game.html',
+              controller: 'gameController'
           }).
           otherwise({
-              redirectTo: '/name'
+              redirectTo: '/login'
           });
 });
 
@@ -45,38 +53,62 @@ app.factory('socketIO', function ($rootScope) {
   };
 });
 
-
-app.controller("nameFormController", function($scope, $location) {
-
+// LOGIN FORM FOR ALL USERS
+app.controller("loginFormController", function($scope, $location) {
    $scope.userName = "";
-
    $scope.submitUserName = function() {
-      $location.path("/blocks/"+$scope.userName);
+      $location.path("/config/" + $scope.userName);
    }
-
+});
+// REGISTER/CREATE A USER/ADMIN
+app.controller("configController", function($scope, $routeParams, $location, socketIO) {
+   
+   socketIO.emit("sign in", { name: $routeParams.name} )
+   socketIO.on("sign in reply", function(reply) {
+	
+	if(reply.admin) { $location.path("/adminPanel"); }
+	else { $location.path("/game/" + reply.player.name); }
+	
+   });
+ 
 });
 
-app.controller("blocksController", function($scope, $routeParams, socketIO) {
+// THIS IS A ADMIN LOGGED IN:
+app.controller("adminPanelController", function($scope, $location, socketIO) {
+   $scope.playerList = [];
+   $scope.player = null;
+   
+   socketIO.emit('adminLogin');
+   socketIO.on("adminLogin reply", function(gameInfo) {
+	   console.log('gameInfo: ', gameInfo);
+	   $scope.player = gameInfo.list[0];
+	   $scope.playerList = gameInfo.list;
+   });
+   
+   socketIO.on("new user", function(playerInfo) {
+      console.log("NEWUSER:", playerInfo);
+      $scope.playerList.push(playerInfo);
+   });
+   
+});
+
+
+// THIS IS A STUDENT LOGGED IN:
+app.controller("gameController", function($scope, $routeParams, $location, socketIO) {
 
    $scope.playerList = [];
    $scope.player = null;
-
-   socketIO.on("connect", function() {
-      console.log("connected", socketIO.id() );
+   
+   socketIO.emit('getMyInfo', { name: $routeParams.name });
+   socketIO.on("getMyInfo reply", function(gameInfo) {
+	   console.log('gameInfo: ', gameInfo);
+	   $scope.player = gameInfo.player;
+	   $scope.playerList = gameInfo.list;
    });
-
-   socketIO.emit("sign in", { name: $routeParams.name} )
-
-   socketIO.on("sign in reply", function(gameInfo) {
-      console.log("SIGNINREPLY", gameInfo.player);
-
-      $scope.player = gameInfo.player;
-      $scope.playerList = gameInfo.list;
-      $scope.playerList.push( $scope.player );
-   });
-
+   
    socketIO.on("new user", function(playerInfo) {
       console.log("NEWUSER:", playerInfo);
       $scope.playerList.push(playerInfo);
    });
 });
+
