@@ -1,0 +1,5 @@
+<div id="blocksField" tabindex="0" ng-keydown="key($event)">
+   <div ng-repeat="player in playerList" class="block" ng-style="{top: player.y, left: player.x, backgroundColor: player.color}">
+      {{player.name}}
+   </div>
+</div>
