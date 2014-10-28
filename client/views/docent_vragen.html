@@ -1,0 +1,10 @@
+<h1>Vragen voor les {{les}}</h1>
+
+<h3>{{message}}</h3>
+
+<ul>
+<li ng-repeat="vraag in vragen"><button ng-click="deleteVraag(vraag)">Verwijder</button><a href="/#/docent/vraag/{{vraag._id}}">{{vraag.vraag}}</a></li>
+</ul>
+
+<a href="/#/docent/vraag">voeg vraag toe</a>
+<a href="/#/docent/lessen">terug</a>

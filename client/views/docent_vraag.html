@@ -1,0 +1,22 @@
+<h1>Vraag toevoegen / bewerken</h1>
+
+<h3>{{message}}</h3>
+
+<div>
+  <form ng-model="vraag" ng-submit="addVraag()">
+    Lesnummer: <br /><input type="text" ng-model="vraag.lesNummer" /><br />
+    Vraag: <br /><input type="text" ng-model="vraag.vraag" /><br />
+    Opties: <br />
+    <label>A:</label><br />
+    <input type="text" ng-model="vraag.opties.A" /><br />
+    <label>B:</label><br />
+    <input type="text" ng-model="vraag.opties.B" /><br />
+    <label>C:</label><br />
+    <input type="text" ng-model="vraag.opties.C" /><br />
+    <label>D:</label><br />
+    <input type="text" ng-model="vraag.opties.D" /><br />
+
+    Antwoord:<br /> <input type="text" ng-model="vraag.antwoord" /><br />
+    <input type="submit" value="voeg toe / bewerk" />
+  </form>
+</div>

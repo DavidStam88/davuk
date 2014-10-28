@@ -1,0 +1,11 @@
+<h1>WELKOM DOCENT!</h1>
+
+<h3>{{message}}</h3>
+
+<div>
+  <form ng-init="docent" class="simple-form">
+    Naam: <input type="text" ng-model="docent.naam" /><br />
+    Wachtwoord: <input type="password" ng-model="docent.wachtwoord" /><br />
+    <button ng-click="gaVerder(docent)">Ga verder</button>
+  </form>
+</div>

@@ -1,0 +1,13 @@
+<h1>Quiz</h1>
+
+<div>
+    <p>Lesnummer: {{vraag.lesNummer}}</p>
+    <p>Vraag: {{vraag.vraag}}</p>
+
+    <ul>
+        <li ng-repeat="speler in spelers">{{speler.naam}}</li>
+    </ul>
+
+    <button ng-click="startQuiz()">Start quiz</button>
+    <button ng-click="startVraag()">Start vraag</button>
+</div>
