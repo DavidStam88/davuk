@@ -1,9 +1,13 @@
-<h1>Lessen:</h1>
+<h1>Beschikbare lessen</h1>
 
 <div>
-<ul>
-	<li ng-repeat="les in lessen"><a href = "/#/docent/vragen/{{les}}">{{les}}</a></li>
-</ul>
 
-<a href = "/docent/eindigSessie">Stop sessie (log uit)</a>
+	<div class="btn-group">
+	  <a ng-repeat="les in lessen" href ="/#/docent/vragen/{{les}}">
+			<button type="button" class="btn btn-default">
+				Les {{les}}
+			</button>
+		</a>
+	</div>
+
 </div>
