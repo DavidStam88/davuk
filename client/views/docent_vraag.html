@@ -1,22 +1,51 @@
 <h1>Vraag toevoegen / bewerken</h1>
 
-<h3>{{message}}</h3>
+<div class="alert alert-success" ng-show="message">
+  {{message}}
+</div>
 
-<div>
-  <form ng-model="vraag" ng-submit="addVraag()">
-    Lesnummer: <br /><input type="text" ng-model="vraag.lesNummer" /><br />
-    Vraag: <br /><input type="text" ng-model="vraag.vraag" /><br />
-    Opties: <br />
-    <label>A:</label><br />
-    <input type="text" ng-model="vraag.opties.A" /><br />
-    <label>B:</label><br />
-    <input type="text" ng-model="vraag.opties.B" /><br />
-    <label>C:</label><br />
-    <input type="text" ng-model="vraag.opties.C" /><br />
-    <label>D:</label><br />
-    <input type="text" ng-model="vraag.opties.D" /><br />
+<div class="row">
+  <div class="col-lg-12">
+  <form class="simple-form" ng-model="vraag" ng-submit="addVraag()">
+    <label> Lesnummer </label>
+    <div class="input-group">
+      <input class="form-control" value="1" type="number" ng-model="vraag.lesNummer" min="1" max="{{lessen.length}}" required>
+    </div>
 
-    Antwoord:<br /> <input type="text" ng-model="vraag.antwoord" /><br />
-    <input type="submit" value="voeg toe / bewerk" />
+    <label> Vraag </label>
+    <div class="input-group">
+      <span class="input-group-addon" > ? </span>
+      <input type="text" class="form-control" ng-model="vraag.vraag" required/>
+    </div>
+
+    <label> Opties </label>
+
+    <div class="input-group">
+      <span class="input-group-addon" > A </span>
+      <input type="text" class="form-control" ng-model="vraag.opties.A" required/>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" > B </span>
+      <input type="text" class="form-control" ng-model="vraag.opties.B" required/>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" > C </span>
+      <input type="text" class="form-control" ng-model="vraag.opties.C" required/>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon" > D </span>
+      <input type="text" class="form-control" ng-model="vraag.opties.D" required/>
+    </div>
+
+    <label> Antwoord </label><br>
+    <select ng-model="vraag.antwoord">
+      <option> A </option>
+      <option> B </option>
+      <option> C </option>
+      <option> D </option>
+    </select>
+    <br><br>
+    <button type="submit" class="btn btn-success"> Opslaan </button>
   </form>
+  </div>
 </div>

@@ -1,11 +1,30 @@
 <h1>Vragen voor les {{les}}</h1>
+<a href="/#/docent/lessen"><button class="btn btn-primary">terug</button></a>
+<br><br>
+<div class="alert alert-success" ng-show="message">
+  {{message}}
+</div>
 
-<h3>{{message}}</h3>
+<div class="row">
+	  <div class="col-lg-12">
 
-<ul>
-<li ng-repeat="vraag in vragen"><button ng-click="deleteVraag(vraag)">Verwijder</button><a href="/#/docent/vraag/{{vraag._id}}">{{vraag.vraag}}</a></li>
-</ul>
+		<div ng-repeat="vraag in vragen" class="input-group">
+		  <span class="input-group-addon" >
+         <a href="/#/docent/vraag/{{vraag._id}}"><i class="fa fa-edit fa-lg"></i></a>
+		  </span>
+		  <span class="form-control">
+			     {{$index + 1}}. {{vraag.vraag}}
+		  </span>
+      <span class="input-group-addon">
+        <i style="cursor: pointer" ng-click="deleteVraag(vraag)" class="fa fa-remove fa-lg"></i>
+      </span>
+		</div><!-- /input-group -->
 
 <a href="/#/docent/vraag">voeg vraag toe</a>
 <a href="/#/docent/lessen">terug</a>
 <a href="/#/docent/quiz/{{les}}">Start deze lesquiz</a>
+	  </div><!-- /.col-lg-12 -->
+	</div><!-- /.row -->
+
+<br>
+<a href="/#/docent/vraag"><button class="btn btn-success"><i class="fa fa-plus fa-lg"></i></button></a>
