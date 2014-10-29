@@ -44,7 +44,7 @@ davukApp.config(['$routeProvider', function ($routeProvider) {
 		templateUrl: '../views/docent_vraag.html',
 		controller: docentController
 	});
-	$routeProvider.when('/docent/quiz', {
+	$routeProvider.when('/docent/quiz/:id', {
 		templateUrl: '../views/docent_quiz.html',
 		controller: docentQuizController
 	});

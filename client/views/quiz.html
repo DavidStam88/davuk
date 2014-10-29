@@ -1,4 +1,41 @@
 <h1>Quiz</h1>
 	<h3>{{message}}</h3>
 
+<div ng-switch on = "view">
+	<div ng-switch-when = "spelersKamer">
+		<h3>Spelers in de kamer</h3>
+    	<ul>
+        	<li ng-repeat="speler in spelers">{{speler.naam}}</li>
+    	</ul>
+	</div>
+	<div ng-switch-when="speelMee">
+		<h3>Speel mee</h3>
+  		<form ng-model="speler" ng-submit="addSpeler(speler)">
+    		<p>Naam:</p><br />
+    		<input type="text" ng-model="speler.naam" /><br />
+    		<input type="submit" value="Speel mee" />
+  		</form>
+	</div>
+	<div ng-switch-when="quiz">
+		<h7>Naam: {{speler.naam}}</h7><BR />
+		<h7>Score: {{speler.score}}</h7>
+		<h3>De vraag</h3>
+		<p>Vraag:</p> 
+		<p>{{vraag.vraag}}</p>
+  		<form ng-model="antwoord" ng-submit="geefAntwoord(antwoord)">
+  			<input type="radio" ng-model="antwoord" value="A">{{vraag.opties.A}}<br/>
+  			<input type="radio" ng-model="antwoord" value="B">{{vraag.opties.B}}<br/>
+  			<input type="radio" ng-model="antwoord" value="C">{{vraag.opties.C}}<br/>
+  			<input type="radio" ng-model="antwoord" value="D">{{vraag.opties.D}}<br/>
+    		<input type="submit" value="Antwoord" />
+  		</form>
+	</div>
+	<div ng-switch-when = "eindeQuiz">
+		<h3>Eindstand</h3>
+    	<ul>
+        	<li ng-repeat="speler in spelers | orderBy:'score':reverse">{{speler.naam}}: {{speler.score}}</li>
+    	</ul>
+	</div>
+</div>
+
 	

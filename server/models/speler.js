@@ -1,8 +1,9 @@
-var speler = function (naam) {
+var speler = function (naam, id) {
 	this.score = 0;
 	this.naam = naam;
+	this.id = id;
 
-	var verwerkAntwoord = function (gegevenAntwoord, juisteAntwoord) {
+	this.verwerkAntwoord = function (gegevenAntwoord, juisteAntwoord) {
 		if (gegevenAntwoord === juisteAntwoord) {
 			this.score += 1;
 		}

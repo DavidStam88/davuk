@@ -1,13 +1,31 @@
-<h1>Quiz</h1>
+<h1>Quiz van les {{lesNummer}}</h1>
 
-<div>
-    <p>Lesnummer: {{vraag.lesNummer}}</p>
-    <p>Vraag: {{vraag.vraag}}</p>
+<div ng-switch on="view">
+    <div ng-switch-when="vraag">
+		<h3>De vraag</h3>
+    	<p>Vraag: <br /> {{vraag.vraag}}</p>
+    	Gegeven antwoorden: <br />
+    	<ul> 
+    		<li>Aantal keer A: {{vraag.antwoorden.A}}</li>
+    		<li>Aantal keer B: {{vraag.antwoorden.B}}</li>
+    		<li>Aantal keer C: {{vraag.antwoorden.C}}</li>
+    		<li>Aantal keer D: {{vraag.antwoorden.D}}</li>
+    	</ul>
+    	<button ng-click="volgendeVraag()">Start volgende vraag</button>
+	</div>
 
-    <ul>
-        <li ng-repeat="speler in spelers">{{speler.naam}}</li>
-    </ul>
+    <div ng-switch-when="spelersKamer">
+		<h3>Spelers in de kamer</h3>
+    	<ul>
+        	<li ng-repeat="speler in spelers">{{speler.naam}}</li>
+    	</ul>
 
-    <button ng-click="startQuiz()">Start quiz</button>
-    <button ng-click="startVraag()">Start vraag</button>
+    	<button ng-click="startQuiz()">Sluit kamer en start quiz</button>
+    </div>
+	<div ng-switch-when = "eindeQuiz">
+		<h3>Eindstand</h3>
+    	<ul>
+        	<li ng-repeat="speler in spelers | orderBy:'score':reverse">{{speler.naam}}: {{speler.score}}</li>
+    	</ul>
+	</div>
 </div>
