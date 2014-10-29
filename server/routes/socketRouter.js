@@ -5,7 +5,7 @@ module.exports = function (io) {
 	io.sockets.on('connection', function (socket) {
 		if (!socketControllers.getQuizActief()) {
 			socket.emit('message', {
-				message : 'Er is geen quiz actief',
+				error : 'Er is geen quiz actief',
 				spelen : false
 			});
 		} else {

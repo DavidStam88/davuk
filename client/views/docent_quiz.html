@@ -1,31 +1,69 @@
 <h1>Quiz van les {{lesNummer}}</h1>
 
 <div ng-switch on="view">
-    <div ng-switch-when="vraag">
-		<h3>De vraag</h3>
-    	<p>Vraag: <br /> {{vraag.vraag}}</p>
-    	Gegeven antwoorden: <br />
-    	<ul> 
-    		<li>Aantal keer A: {{vraag.antwoorden.A}}</li>
-    		<li>Aantal keer B: {{vraag.antwoorden.B}}</li>
-    		<li>Aantal keer C: {{vraag.antwoorden.C}}</li>
-    		<li>Aantal keer D: {{vraag.antwoorden.D}}</li>
-    	</ul>
-    	<button ng-click="volgendeVraag()">Start volgende vraag</button>
-	</div>
-
     <div ng-switch-when="spelersKamer">
-		<h3>Spelers in de kamer</h3>
-    	<ul>
-        	<li ng-repeat="speler in spelers">{{speler.naam}}</li>
-    	</ul>
+      <h3>Spelers in de kamer</h3>
+      <div class="alert alert-danger" ng-hide="spelers[0]">
+        Er zijn nog geen spelers ingelogd
+      </div>
 
-    	<button ng-click="startQuiz()">Sluit kamer en start quiz</button>
+        <div ng-repeat="speler in spelers" class="input-group">
+          <span class="input-group-addon" >
+            {{$index + 1 }}
+          </span>
+          <span class="form-control">
+              {{speler.naam}}
+          </span>
+        </div>
+
+      <br>
+      <button class="btn btn-primary" ng-click="startQuiz()"> Start de quiz! <i class="fa fa-arrow-right fa-lg"></i> </button>
     </div>
-	<div ng-switch-when = "eindeQuiz">
-		<h3>Eindstand</h3>
-    	<ul>
-        	<li ng-repeat="speler in spelers | orderBy:'score':reverse">{{speler.naam}}: {{speler.score}}</li>
-    	</ul>
-	</div>
+
+    <div ng-switch-when="vraag">
+      <div class="panel panel-default">
+        <div class="panel-heading">Vraag nr. ?</div>
+        <div class="panel-body">
+          <p>{{vraag.vraag}}</p>
+        </div>
+        <div style="cursor: auto">
+        <p> Antwoorden: </p>
+            <div class="input-group">
+              <span class="input-group-addon" > A </span>
+              <span class="form-control">{{vraag.antwoorden.A}}</span>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" > B </span>
+              <span class="form-control">{{vraag.antwoorden.B}}</span>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" > C </span>
+              <span class="form-control">{{vraag.antwoorden.C}}</span>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" > D </span>
+              <span class="form-control">{{vraag.antwoorden.D}}</span>
+            </div>
+
+            <div class="panel-footer">
+              <button ng-click="volgendeVraag()" class="btn btn-success">Start volgende vraag</button>
+            </div>
+          </div>
+      </div>
+	  </div>
+
+
+  	<div ng-switch-when = "eindeQuiz">
+  		<h3>Eindstand</h3>
+        <table class="table">
+          <tr>
+            <th> Naam </th>
+            <th> Score </th>
+          </tr>
+          <tr ng-repeat="speler in spelers | orderBy:'score':reverse">
+            <td> {{speler.naam}} </td>
+            <td> {{speler.score}} </td>
+          </tr>
+        </table>
+  	</div>
 </div>

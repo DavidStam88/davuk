@@ -21,12 +21,35 @@ body a:hover{
   text-decoration: none;
 }
 
+.quizgame {
+  text-align: center;
+}
+#eindstand {
+  text-align: left;
+}
+.panel {
+  text-align: left;
+}
+.panel .input-group-addon:first-child {
+  border-radius: 0;
+  border-left: 0;
+}
+.panel .input-group .form-control{
+  border-radius: 0;
+  border-right: 0;
+  cursor: pointer;
+  float: none;
+}
+.panel button {
+  width: 100%;
+
+}
 /* loginForm: */
 #nameForm {
 	text-align: center;
 }
 #nameForm .input-group {
-	width: 50%;
+	width: 100%;
 	margin: 0 auto;
 	padding: 1%;
 }

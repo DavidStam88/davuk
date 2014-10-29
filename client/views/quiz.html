@@ -1,41 +1,93 @@
-<h1>Quiz</h1>
-	<h3>{{message}}</h3>
+<div class="col-lg-3">
+</div>
+<div class="col-lg-6 quizgame">
+	<h1>DaVuk Quiz</h1>
+	<div class="alert alert-success" ng-show="message">
+		{{message}}
+	</div>
+	<div class="alert alert-danger" ng-show="error">
+		{{error}}
+	</div>
 
-<div ng-switch on = "view">
-	<div ng-switch-when = "spelersKamer">
-		<h3>Spelers in de kamer</h3>
-    	<ul>
-        	<li ng-repeat="speler in spelers">{{speler.naam}}</li>
-    	</ul>
-	</div>
-	<div ng-switch-when="speelMee">
-		<h3>Speel mee</h3>
-  		<form ng-model="speler" ng-submit="addSpeler(speler)">
-    		<p>Naam:</p><br />
-    		<input type="text" ng-model="speler.naam" /><br />
-    		<input type="submit" value="Speel mee" />
-  		</form>
-	</div>
-	<div ng-switch-when="quiz">
-		<h7>Naam: {{speler.naam}}</h7><BR />
-		<h7>Score: {{speler.score}}</h7>
-		<h3>De vraag</h3>
-		<p>Vraag:</p> 
-		<p>{{vraag.vraag}}</p>
-  		<form ng-model="antwoord" ng-submit="geefAntwoord(antwoord)">
-  			<input type="radio" ng-model="antwoord" value="A">{{vraag.opties.A}}<br/>
-  			<input type="radio" ng-model="antwoord" value="B">{{vraag.opties.B}}<br/>
-  			<input type="radio" ng-model="antwoord" value="C">{{vraag.opties.C}}<br/>
-  			<input type="radio" ng-model="antwoord" value="D">{{vraag.opties.D}}<br/>
-    		<input type="submit" value="Antwoord" />
-  		</form>
-	</div>
-	<div ng-switch-when = "eindeQuiz">
-		<h3>Eindstand</h3>
-    	<ul>
-        	<li ng-repeat="speler in spelers | orderBy:'score':reverse">{{speler.naam}}: {{speler.score}}</li>
-    	</ul>
+	<div ng-switch on = "view">
+
+		<div ng-switch-when="speelMee">
+			<div id="nameForm">
+				<h2>What's your name?</h2>
+				<form ng-model="speler" ng-submit="addSpeler(speler)" class="simple-form">
+					<div class="input-group">
+						<input class="form-control" type="text" ng-model="speler.naam" placeholder="naam">
+					</div>
+					<div class="input-group">
+					<button type="submit" class="btn btn-info" ng-disabled="speler.naam.length==0">Login</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div ng-switch-when = "spelersKamer">
+			<h3>Spelers in de kamer</h3>
+			<div class="col-lg-12">
+
+				<div ng-repeat="speler in spelers" class="input-group">
+					<span class="input-group-addon" >
+						{{$index + 1 }}
+					</span>
+					<span class="form-control">
+							{{speler.naam}}
+					</span>
+				</div><!-- /input-group -->
+			</div><!-- /.col-lg-12 -->
+
+		</div>
+
+		<div ng-switch-when="quiz">
+			<h4>Naam: {{speler.naam}}</h4>
+			<h4>Score: {{speler.score}}</h4>
+			<div class="panel panel-default">
+			  <div class="panel-heading">Vraag nr. ?</div>
+			  <div class="panel-body">
+			    <p>{{vraag.vraag}}</p>
+			  </div>
+
+			  <form ng-model="antwoord" ng-submit="geefAntwoord(antwoord)">
+						<div class="input-group">
+							<span class="input-group-addon" > <input id="antwoordA" type="radio" ng-model="antwoord" value="A"> </span>
+							<span class="form-control" ng-click="checkAntwoord('A')">{{vraag.opties.A}}</span>
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" > <input id="antwoordB" type="radio" ng-model="antwoord" value="B"> </span>
+							<span class="form-control" ng-click="checkAntwoord('B')">{{vraag.opties.B}}</span>
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" > <input id="antwoordC" type="radio" ng-model="antwoord" value="C"> </span>
+							<span class="form-control" ng-click="checkAntwoord('C')">{{vraag.opties.C}}</span>
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" > <input id="antwoordD" type="radio" ng-model="antwoord" value="D"> </span>
+							<span class="form-control" ng-click="checkAntwoord('D')">{{vraag.opties.D}}</span>
+						</div>
+
+						<div class="panel-footer">
+							<button type="submit" class="btn btn-success" ng-disabled="!antwoord">Opslaan</button>
+						</div>
+					</form>
+			</div>
+		</div>
+		<div ng-switch-when = "eindeQuiz">
+			<h3>Eindstand</h3>
+				<table id="eindstand" class="table">
+					<tr>
+						<th> Naam </th>
+						<th> Score </th>
+					</tr>
+					<tr ng-repeat="speler in spelers | orderBy:'score':reverse">
+						<td> {{speler.naam}} </td>
+						<td> {{speler.score}} </td>
+					</tr>
+				</table>
+		</div>
 	</div>
 </div>
-
-	
+<div class="col-lg-3">
+</div>
