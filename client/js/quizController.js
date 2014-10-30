@@ -1,6 +1,7 @@
 var quizController = function ($scope, socket) {
 	$scope.vraag = {};
-	$scope.timer = 0;
+	$scope.timer = 30;
+	$scope.timeLeft = $scope.timer;
 	$scope.message = '';
 	$scope.error = '';
 	$scope.spelers = [];
@@ -37,7 +38,7 @@ var quizController = function ($scope, socket) {
 		$scope.antwoord = id;
 		document.getElementById('antwoord'+id).checked = true;
 	}
-	
+
 	socket.on('updateScore', function(score){
 		nieuweScore = score;
 	});
@@ -49,6 +50,11 @@ var quizController = function ($scope, socket) {
 		$scope.speler.score = nieuweScore;
 		$scope.view = 'quiz';
 		geantwoord = false;
+
+		$scope.timeLeft = $scope.timer;
+	  var myTimer = setInterval( function(){$scope.timeLeft--; console.log('intervalletje' + $scope.timeLeft); $scope.$digest();} , 1000 ); // reduce time each seconds
+	  setTimeout( function(){clearInterval(myTimer);}, ($scope.timer+0.9)*1000);
+
 		$scope.$digest();
 	});
 
@@ -75,7 +81,3 @@ var quizController = function ($scope, socket) {
 		$scope.$digest();
 	});
 };
-
-function check (id) {
-
-}
