@@ -10,7 +10,7 @@ var port = process.env.PORT || 3000;
 var docentRouter = require('./routes/docentRouter.js')(express);
 
 // Deze regel zorgt ervoor dat de socketrouters geintergreerd worden.
-var quizSockets = require('./routes/socketRouter.js')(io);
+var quizSockets = require('./controllers/socketControllers.js')(io);
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended : true}));

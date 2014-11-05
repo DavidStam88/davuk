@@ -1,18 +1,21 @@
+var util         = require("util");
+var EventEmitter = require("events").EventEmitter;
 var vraag = require('../models/vraag.js');
-var Speler = require('../models/speler.js');
 
-// Hier moeten nog een hoop dingen ingevuld worden en het spelermodel aan toegevoegd worden.
 var quiz = function (titel, lesNummer) {
+	var vraagActief = false;
+	var secondePerVraag = 30;
+	var timer;
+
 	this.titel = titel;
 	this.lesNummer = lesNummer;
 	this.quizActief = false;
-	this.vraagActief = false;
 	this.eindeVanQuiz = true;
 	this.vragen = [];
 	this.vraag = {};
 	this.vraagNummer = 0;
+	EventEmitter.call(this);
 
-	//Quizgedeelte
 	this.setVraag = function () {
 		if (this.vragen.length > 0) {
 			this.vraag.vraag = this.vragen[this.vraagNummer].vraag;
@@ -45,12 +48,31 @@ var quiz = function (titel, lesNummer) {
 		}
 	}
 	this.eindeQuiz = function () {
-		console.log("einde quiz.");
 		this.eindeVanQuiz = false;
 	}
 	this.sluitKamer = function () {
-		quizActief = true;
+		this.quizActief = true;
 	}
+	
+	this.telAf = function () {
+		vraagActief = true;
+		var self = this;
+		var tijd = secondePerVraag;
+		var alertTijd = function () {
+			if (tijd - 1 < 1) {
+				clearInterval(timer);
+				tijd = 0;
+				vraagActief = false;
+			} else {
+				tijd -= 1;
+			}
+			self.emit('secondeVoorbij', tijd);
+		}
+		timer = setInterval(function () {
+			alertTijd();
+		}, 1000);
+	}
+
 	this.getVraag = function () {
 		if (this.eindeVanQuiz) {
 			return this.vraag;
@@ -58,9 +80,14 @@ var quiz = function (titel, lesNummer) {
 			return this.eindeVanQuiz;
 		}
 	}
+	this.getVraagActief = function () {
+		return vraagActief;
+	}
+	this.getQuizActief = function () {
+		return this.quizActief;
+	}
 	this.setVragen();
 
-	//Spelergedeelte
 	this.verwerkAntwoord = function (antwoord) {
 		if (antwoord === 'A') {
 			this.vraag.antwoorden.A += 1;
@@ -71,7 +98,15 @@ var quiz = function (titel, lesNummer) {
 		} else if (antwoord === 'D') {
 			this.vraag.antwoorden.D += 1;
 		}
+
+		if (antwoord.toString().trim() === this.vraag.antwoord.toString().trim()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
+
+util.inherits(quiz, EventEmitter);
 
 module.exports = quiz;

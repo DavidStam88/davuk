@@ -4,6 +4,7 @@ var quizController = function ($scope, socket) {
 	$scope.timeLeft = $scope.timer;
 	$scope.message = '';
 	$scope.error = '';
+	$scope.stand = 'Tussenstand';
 	$scope.spelers = [];
 	$scope.view = '';
 	$scope.antwoord = '';
@@ -13,6 +14,8 @@ var quizController = function ($scope, socket) {
 	$scope.speler.naam = '';
 
 	$scope.addSpeler = function (speler) {
+		nieuweScore = 0;
+		$scope.speler.score = 0;
 		socket.emit('addSpeler', speler);
 		$scope.speler.naam = speler.naam;
 		$scope.message = 'Aangemeld, de quiz begint bijna..';
@@ -41,20 +44,33 @@ var quizController = function ($scope, socket) {
 
 	socket.on('updateScore', function(score){
 		nieuweScore = score;
+		$scope.$digest();
 	});
 
 	socket.on('vraag', function(vraag){
-		$scope.message = "Er is een nieuwe vraag!";
-		$scope.error = '';
-		$scope.vraag = vraag;
-		$scope.speler.score = nieuweScore;
-		$scope.view = 'quiz';
-		geantwoord = false;
+		if($scope.speler.naam) {
+			$scope.message = "Er is een nieuwe vraag!";
+			$scope.error = '';
+			$scope.vraag = vraag;
+			$scope.speler.score = nieuweScore;
+			$scope.view = 'quiz';
+			geantwoord = false;
+		} else {
+			$scope.view = '';
+			$scope.message = "";
+			$scope.error = "Er is een quiz actief en je bent te laat met aanmelden :(..";
+		}
+		$scope.$digest();
+	});
 
-		$scope.timeLeft = $scope.timer;
-	  var myTimer = setInterval( function(){$scope.timeLeft--; console.log('intervalletje' + $scope.timeLeft); $scope.$digest();} , 1000 ); // reduce time each seconds
-	  setTimeout( function(){clearInterval(myTimer);}, ($scope.timer+0.9)*1000);
-
+	socket.on('secondeVoorbij', function(tijd) {
+		$scope.timeLeft = tijd;
+		if ($scope.timeLeft < 1) {
+			$scope.message = '';
+			$scope.error = '';
+			$scope.stand = 'Tussenstand';
+			$scope.view = 'stand';
+		}
 		$scope.$digest();
 	});
 
@@ -69,15 +85,44 @@ var quizController = function ($scope, socket) {
 		$scope.$digest();
 	});
 
-	socket.on('nieuweSpeler', function(speler) {
-		$scope.spelers.push(speler);
+	socket.on('veranderingSpelers', function(spelers) {
+		$scope.spelers = spelers;
 		$scope.$digest();
 	});
 
 	socket.on('eindeQuiz', function (spelers) {
-		$scope.spelers = spelers;
-		$scope.view = 'eindeQuiz';
-		$scope.speler.score = nieuweScore;
+		if ($scope.speler.naam) {
+			$scope.message = '';
+			$scope.error = '';
+			$scope.spelers = spelers;
+			$scope.stand = 'Eindstand';
+			$scope.view = 'stand';
+			$scope.speler.score = nieuweScore;
+			$scope.$digest();
+		}
+	});
+
+	socket.on('quizOnderbroken', function (message) {
+		$scope.message = '';
+		$scope.error = message;
+		$scope.view = '';
+		$scope.$digest();
+	});
+
+	socket.on('spelerVerlaatQuiz', function (spelerNaam) {
+		console.log(spelerNaam + ' heeft de quiz verlaten.');
+	});
+
+	socket.on('quizActief', function (message) {
+		$scope.message = message;
+		$scope.error = '';
+		$scope.view = 'speelMee';
+		$scope.$digest();
+	});
+
+	socket.on('geenVraagActief', function(error) {
+		$scope.error = error;
+		$scope.message = '';
 		$scope.$digest();
 	});
 };

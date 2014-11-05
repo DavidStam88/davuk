@@ -21,49 +21,76 @@
     </div>
 
     <div ng-switch-when="vraag">
+
+      <div class="progress">
+        <div class="progress-bar"  role="progressbar" style="width: {{timeLeft/timer*100}}%;">
+        {{timeLeft}}
+        </div>
+      </div>
+      
       <div class="panel panel-default">
         <div class="panel-heading">Vraag nr. ?</div>
         <div class="panel-body">
           <p>{{vraag.vraag}}</p>
         </div>
         <div style="cursor: auto">
-        <p> Antwoorden: </p>
+          
+          <p> Opties: </p>
             <div class="input-group">
               <span class="input-group-addon" > A </span>
-              <span class="form-control">{{vraag.antwoorden.A}}</span>
+              <span class="form-control">{{vraag.opties.A}}</span>
             </div>
             <div class="input-group">
               <span class="input-group-addon" > B </span>
-              <span class="form-control">{{vraag.antwoorden.B}}</span>
+              <span class="form-control">{{vraag.opties.B}}</span>
             </div>
             <div class="input-group">
               <span class="input-group-addon" > C </span>
-              <span class="form-control">{{vraag.antwoorden.C}}</span>
+              <span class="form-control">{{vraag.opties.C}}</span>
             </div>
             <div class="input-group">
               <span class="input-group-addon" > D </span>
-              <span class="form-control">{{vraag.antwoorden.D}}</span>
+              <span class="form-control">{{vraag.opties.D}}</span>
+            </div>
+
+        <p> Gegeven antwoorden: </p>
+            <div class="input-group">
+              <span class="input-group-addon" > A </span>
+              <span class="form-control">{{vraag.antwoorden.A}} X</span>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" > B </span>
+              <span class="form-control">{{vraag.antwoorden.B}} X</span>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" > C </span>
+              <span class="form-control">{{vraag.antwoorden.C}} X</span>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon" > D </span>
+              <span class="form-control">{{vraag.antwoorden.D}} X</span>
             </div>
 
             <div class="panel-footer">
-              <button ng-click="volgendeVraag()" class="btn btn-success">Start volgende vraag</button>
+              <button class="btn btn-success" ng-show="volgendeVraagButton" ng-click="volgendeVraag()">Start volgende vraag</button>
             </div>
           </div>
       </div>
 	  </div>
 
 
-  	<div ng-switch-when = "eindeQuiz">
-  		<h3>Eindstand</h3>
+  	<div ng-switch-when = "stand">
+  		<h3>{{stand}}</h3>
         <table class="table">
           <tr>
             <th> Naam </th>
             <th> Score </th>
           </tr>
-          <tr ng-repeat="speler in spelers | orderBy:'score':reverse">
+          <tr ng-repeat="speler in spelers | orderBy:'score':reverse=true">
             <td> {{speler.naam}} </td>
             <td> {{speler.score}} </td>
           </tr>
         </table>
+        <button class="btn btn-success" ng-click="eindigQuiz()">Eindig quiz</button>
   	</div>
 </div>

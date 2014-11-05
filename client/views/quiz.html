@@ -81,14 +81,15 @@
 					</form>
 			</div>
 		</div>
-		<div ng-switch-when = "eindeQuiz">
-			<h3>Eindstand</h3>
+
+
+		<div ng-switch-when = "stand">
+			<h3>{{stand}}</h3>
 				<table id="eindstand" class="table">
 					<tr>
 						<th> Naam </th>
 						<th> Score </th>
-					</tr>
-					<tr ng-repeat="speler in spelers | orderBy:'score':reverse">
+					<tr ng-repeat="speler in spelers | orderBy:'score':reverse=true">
 						<td> {{speler.naam}} </td>
 						<td> {{speler.score}} </td>
 					</tr>
