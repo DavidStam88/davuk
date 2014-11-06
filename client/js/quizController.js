@@ -42,16 +42,16 @@ var quizController = function ($scope, socket) {
 		document.getElementById('antwoord'+id).checked = true;
 	}
 
-	socket.on('updateScore', function(score){
-		nieuweScore = score;
+	socket.on('updateScore', function(res){
+		nieuweScore = res.data;
 		$scope.$digest();
 	});
 
-	socket.on('vraag', function(vraag){
+	socket.on('vraag', function(res){
 		if($scope.speler.naam) {
-			$scope.message = "Er is een nieuwe vraag!";
-			$scope.error = '';
-			$scope.vraag = vraag;
+			$scope.message = res.message;
+			$scope.error = res.error;
+			$scope.vraag = res.data;
 			$scope.speler.score = nieuweScore;
 			$scope.view = 'quiz';
 			geantwoord = false;
@@ -63,38 +63,40 @@ var quizController = function ($scope, socket) {
 		$scope.$digest();
 	});
 
-	socket.on('secondeVoorbij', function(tijd) {
-		$scope.timeLeft = tijd;
-		if ($scope.timeLeft < 1) {
-			$scope.message = '';
-			$scope.error = '';
-			$scope.stand = 'Tussenstand';
-			$scope.view = 'stand';
+	socket.on('secondeVoorbij', function(res) {
+		if($scope.speler.naam) {
+			$scope.timeLeft = res.data;
+			if ($scope.timeLeft < 1) {
+				$scope.message = '';
+				$scope.error = '';
+				$scope.stand = 'Tussenstand';
+				$scope.view = 'stand';
+			}
+			$scope.$digest();
 		}
-		$scope.$digest();
 	});
 
-	socket.on('message', function(data){
-		if (data.spelen) {
+	socket.on('message', function(res){
+		if (res.data) {
 			$scope.view = 'speelMee';
 		} else {
 			$scope.view = '';
 		}
-		$scope.message = data.message;
-		$scope.error = data.error;
+		$scope.message = res.message;
+		$scope.error = res.error;
 		$scope.$digest();
 	});
 
-	socket.on('veranderingSpelers', function(spelers) {
-		$scope.spelers = spelers;
+	socket.on('veranderingSpelers', function(res) {
+		$scope.spelers = res.data;
 		$scope.$digest();
 	});
 
-	socket.on('eindeQuiz', function (spelers) {
+	socket.on('eindeQuiz', function (res) {
 		if ($scope.speler.naam) {
-			$scope.message = '';
-			$scope.error = '';
-			$scope.spelers = spelers;
+			$scope.message = res.message;
+			$scope.error = res.error;
+			$scope.spelers = res.data;
 			$scope.stand = 'Eindstand';
 			$scope.view = 'stand';
 			$scope.speler.score = nieuweScore;
@@ -102,27 +104,27 @@ var quizController = function ($scope, socket) {
 		}
 	});
 
-	socket.on('quizOnderbroken', function (message) {
-		$scope.message = '';
-		$scope.error = message;
+	socket.on('quizOnderbroken', function (res) {
+		$scope.message = res.message;
+		$scope.error = res.error;
 		$scope.view = '';
 		$scope.$digest();
 	});
 
-	socket.on('spelerVerlaatQuiz', function (spelerNaam) {
-		console.log(spelerNaam + ' heeft de quiz verlaten.');
+	socket.on('spelerVerlaatQuiz', function (res) {
+		console.log(res.message);
 	});
 
-	socket.on('quizActief', function (message) {
-		$scope.message = message;
-		$scope.error = '';
+	socket.on('quizActief', function (res) {
+		$scope.message = res.message;
+		$scope.error = res.error;
 		$scope.view = 'speelMee';
 		$scope.$digest();
 	});
 
-	socket.on('geenVraagActief', function(error) {
-		$scope.error = error;
-		$scope.message = '';
+	socket.on('geenVraagActief', function(res) {
+		$scope.error = res.error;
+		$scope.message = res.message;
 		$scope.$digest();
 	});
 };

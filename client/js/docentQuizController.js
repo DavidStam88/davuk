@@ -35,33 +35,33 @@ var docentQuizController = function ($scope, $routeParams, $location, $window, d
 				$window.location = '/#/docent/lessen';
 			}
 
-			socket.on('veranderingSpelers', function(spelers) {
-				$scope.spelers = spelers;
+			socket.on('veranderingSpelers', function(res) {
+				$scope.spelers = res.data;
 				$scope.$digest();
 			});
 
-			socket.on('vraag', function(vraag){
+			socket.on('vraag', function(res){
 				$scope.volgendeVraagButton = false;
-				$scope.vraag = vraag;
+				$scope.vraag = res.data;
 				$scope.$digest();
 			});
 
-			socket.on('vraagAntwoorden', function(vraag){
-				$scope.vraag = vraag;
+			socket.on('vraagAntwoorden', function(res){
+				$scope.vraag = res.data;
 				$scope.$digest();
 			});
 
-			socket.on('eindeQuiz', function (spelers) {
-				$scope.spelers = spelers;
+			socket.on('eindeQuiz', function (res) {
+				$scope.spelers = res.data;
 				$scope.stand = 'Eindstand';
 				$scope.view = 'stand';
 				$scope.$digest();
 			});
 
-			socket.on('secondeVoorbij', function(tijd) {
-				$scope.timeLeft = tijd;
+			socket.on('secondeVoorbij', function(res) {
+				$scope.timeLeft = res.data;
 				if ($scope.timeLeft < 1) {
-					$scope.message = '';
+					$scope.message = res.message;
 					$scope.volgendeVraagButton = true;
 				}
 				$scope.$digest();

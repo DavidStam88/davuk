@@ -3,7 +3,7 @@ var socketControllers = require('../controllers/socketControllers.js');
 var quiz = false;
 var spelers = [];
 
-var verwijderSpeler = function (spelerId) {
+var verwijderSpeler = function(spelerId) {
 	var i;
 	for (i = 0; i < spelers.length; i += 1) {
 		if (spelers[i].id === spelerId) {
@@ -12,65 +12,62 @@ var verwijderSpeler = function (spelerId) {
 	}
 }
 
+var response = function(message, error, data) {
+	return {
+		message : message,
+		error : error,
+		data : data
+	};
+}
+
 module.exports = function (io) {
 	io.sockets.on('connection', function (socket) {
 		if (!quiz) {
-			socket.emit('message', {
-				error : 'Er is geen quiz actief',
-				spelen : false
-			});
+			socket.emit('message', response('', 'Er is geen quiz actief.', false));
 		} else if (quiz && quiz.getQuizActief()) {
-			socket.emit('message', {
-				error : 'Er is een quiz bezig en de kamer is gesloten! Probeer het later nog eens.',
-				spelen : false
-			});
+			socket.emit('message', response('', 'Er is een quiz bezig en de kamer is gesloten! Probeer het later nog eens.', false));
 		} 
 		else {
-			socket.emit('message', {
-				message : 'Er is een quiz actief.. Speel mee!',
-				spelen : true
-			});
+			socket.emit('message', response('Er is een quiz actief.. Speel mee!', "", true));
 		}
 
-		//Docentgedeelte
 		socket.on('startQuiz', function (data) {
 			socket.docent = {};
 			socket.docent = {
 				id : 'docent'
 			}
 			quiz = new q(data.titel, data.lesNummer);
-			io.emit('quizActief', 'Er is een quiz actief. Speel mee!');
+			io.emit('quizActief', response('Er is een quiz actief. Speel mee!', "", {}));
 		});
 		socket.on('sluitKamerEnStart', function () {
 			quiz.sluitKamer();
-			io.emit('vraag', quiz.getVraag());
+			io.emit('vraag', response("Er is een nieuwe vraag!", "", quiz.getVraag()));
 
 			quiz.telAf();
 			quiz.on('secondeVoorbij', function(tijd) {
-				io.emit('secondeVoorbij', tijd);
+				io.emit('secondeVoorbij', response("", "", tijd));
 			});
 
 		});
 		socket.on('volgendeVraag', function () {
 			quiz.volgendeVraag();
 			if (!quiz.getVraag()) {
-				io.emit('eindeQuiz', spelers);
+				io.emit('eindeQuiz', response("", "De quiz is afgelopen.", spelers));
 			} else {
-				io.emit('vraag', quiz.getVraag());
+				io.emit('vraag', response("Er is een nieuwe vraag!", "", quiz.getVraag()));
 				
 				quiz.telAf();
 				quiz.on('secondeVoorbij', function(tijd) {
-					io.emit('secondeVoorbij', tijd);
+					io.emit('secondeVoorbij', response("", "", tijd));
 				});
 			}
 		});
 		socket.on('eindigQuiz', function () {
       		spelers = [];
       		quiz = false;
-      		io.emit('quizOnderbroken', 'De docent heeft de quiz beëindigd!');
+      		io.emit('quizOnderbroken', response("", 'De docent heeft de quiz beëindigd!', {}));
 		});
 
-		//Leerlinggedeelte
 		socket.on('addSpeler', function (speler) {
 			socket.speler = {};
 			var newSpeler = {
@@ -80,7 +77,7 @@ module.exports = function (io) {
 			}
 			socket.speler = newSpeler;
 			spelers[newSpeler.id] = newSpeler;
-			io.emit('veranderingSpelers', spelers);
+			io.emit('veranderingSpelers', response(socket.speler.naam + " heeft zich aangemeld.", "", spelers));
 		});
 
 		socket.on('antwoord', function (antwoord) {
@@ -94,24 +91,25 @@ module.exports = function (io) {
     					spelers[i] = socket.speler;
 					}
 				}
-				socket.emit('updateScore', socket.speler.score);
-				io.emit('vraagAntwoorden', quiz.getVraag());
-				io.emit('veranderingSpelers', spelers);
+				socket.emit('updateScore', response("", "", socket.speler.score));
+				io.emit('vraagAntwoorden', response("Er is een nieuwe vraag!", "", quiz.getVraag()));
+				io.emit('veranderingSpelers', response("Er is een verandering in spelers aangetroffen.", "", spelers));
 			}
 		});
 
-		//Beide
 		socket.on('disconnect', function() {
+			var naam;
       		if (socket.docent) {
       			spelers = [];
       			quiz = false;
       			console.log('De docent heeft er geen zin meer in!');
-      			io.emit('quizOnderbroken', 'De docent heeft er geen zin meer in!');
+      			io.emit('quizOnderbroken', response("", 'De docent heeft er geen zin meer in!', {}));
       		} else if (socket.speler) {
-      			io.emit('spelerVerlaatQuiz', socket.speler.naam);
+      			io.emit('spelerVerlaatQuiz', response(socket.speler.naam + " heeft de quiz verlaten.", "", spelers));
+      			naam = socket.speler.naam;
       			verwijderSpeler(socket.speler.id);
       			socket.speler = false;
-      			io.emit('veranderingSpelers', spelers);
+      			io.emit('veranderingSpelers', response("", "", spelers));
       		}
    		});
 	});

@@ -40,11 +40,13 @@ var quiz = function (titel, lesNummer) {
 		return this.vraag;
 	}
 	this.volgendeVraag = function () {
-		if ((this.vragen.length - 1) > this.vraagNummer) {
-			this.vraagNummer += 1;
-			this.setVraag();
-		} else {
-			this.eindeQuiz();
+		if (!vraagActief) {
+			if ((this.vragen.length - 1) > this.vraagNummer) {
+				this.vraagNummer += 1;
+				this.setVraag();
+			} else {
+				this.eindeQuiz();
+			}
 		}
 	}
 	this.eindeQuiz = function () {
@@ -89,20 +91,22 @@ var quiz = function (titel, lesNummer) {
 	this.setVragen();
 
 	this.verwerkAntwoord = function (antwoord) {
-		if (antwoord === 'A') {
-			this.vraag.antwoorden.A += 1;
-		} else if (antwoord === 'B') {
-			this.vraag.antwoorden.B += 1;
-		} else if (antwoord === 'C') {
-			this.vraag.antwoorden.C += 1;
-		} else if (antwoord === 'D') {
-			this.vraag.antwoorden.D += 1;
-		}
+		if (!vraagActief) {
+			if (antwoord === 'A') {
+				this.vraag.antwoorden.A += 1;
+			} else if (antwoord === 'B') {
+				this.vraag.antwoorden.B += 1;
+			} else if (antwoord === 'C') {
+				this.vraag.antwoorden.C += 1;
+			} else if (antwoord === 'D') {
+				this.vraag.antwoorden.D += 1;
+			}
 
-		if (antwoord.toString().trim() === this.vraag.antwoord.toString().trim()) {
-			return true;
-		} else {
-			return false;
+			if (antwoord.toString().trim() === this.vraag.antwoord.toString().trim()) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }
