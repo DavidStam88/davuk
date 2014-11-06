@@ -5,7 +5,7 @@ var docentQuizController = function ($scope, $routeParams, $location, $window, d
 			$window.location = '/#/docent';
 		} else {
 			socket = io.connect('http://localhost:3000');
-	
+
 			var data = {
 				titel : "Quiz voor les " + $routeParams.id,
 				lesNummer : $routeParams.id
@@ -33,6 +33,11 @@ var docentQuizController = function ($scope, $routeParams, $location, $window, d
 			$scope.eindigQuiz = function() {
 				socket.emit('eindigQuiz', {});
 				$window.location = '/#/docent/lessen';
+			}
+			$scope.vraagKleur = function(optie){
+				if(optie == $scope.vraag.antwoord.trim()){
+					return 'progress-bar-success';
+				}
 			}
 
 			socket.on('veranderingSpelers', function(res) {
@@ -66,7 +71,8 @@ var docentQuizController = function ($scope, $routeParams, $location, $window, d
 				}
 				$scope.$digest();
 			});
-		
+
 		}
 	});
+
 };

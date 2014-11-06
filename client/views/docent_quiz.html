@@ -17,7 +17,7 @@
         </div>
 
       <br>
-      <button class="btn btn-primary" ng-click="startQuiz()"> Start de quiz! <i class="fa fa-arrow-right fa-lg"></i> </button>
+      <button class="btn btn-primary" ng-disabled="!spelers[0]" ng-click="startQuiz()"> Start de quiz! <i class="fa fa-arrow-right fa-lg"></i> </button>
     </div>
 
     <div ng-switch-when="vraag">
@@ -27,14 +27,13 @@
         {{timeLeft}}
         </div>
       </div>
-      
       <div class="panel panel-default">
         <div class="panel-heading">Vraag nr. ?</div>
         <div class="panel-body">
           <p>{{vraag.vraag}}</p>
         </div>
         <div style="cursor: auto">
-          
+
           <p> Opties: </p>
             <div class="input-group">
               <span class="input-group-addon" > A </span>
@@ -54,25 +53,29 @@
             </div>
 
         <p> Gegeven antwoorden: </p>
-            <div class="input-group">
-              <span class="input-group-addon" > A </span>
-              <span class="form-control">{{vraag.antwoorden.A}} X</span>
+            <div class="progress">
+              <div class="progress-bar" ng-class="vraagKleur('A')" role="progressbar" style="width: {{(vraag.antwoorden.A/spelers.length*95) + 5}}%;">
+                A: {{vraag.antwoorden.A}}x
+              </div>
             </div>
-            <div class="input-group">
-              <span class="input-group-addon" > B </span>
-              <span class="form-control">{{vraag.antwoorden.B}} X</span>
+            <div class="progress">
+              <div class="progress-bar" ng-class="vraagKleur('B')" role="progressbar" style="width: {{(vraag.antwoorden.B/spelers.length*95) + 5}}%;">
+                B: {{vraag.antwoorden.B}}x
+              </div>
             </div>
-            <div class="input-group">
-              <span class="input-group-addon" > C </span>
-              <span class="form-control">{{vraag.antwoorden.C}} X</span>
+            <div class="progress">
+              <div class="progress-bar" ng-class="vraagKleur('C')" role="progressbar" style="width: {{(vraag.antwoorden.C/spelers.length*95) + 5}}%;">
+                C: {{vraag.antwoorden.C}}x
+              </div>
             </div>
-            <div class="input-group">
-              <span class="input-group-addon" > D </span>
-              <span class="form-control">{{vraag.antwoorden.D}} X</span>
+            <div class="progress">
+              <div class="progress-bar" ng-class="vraagKleur('D')" role="progressbar" style="width: {{(vraag.antwoorden.D/spelers.length*95) + 5}}%;">
+                D: {{vraag.antwoorden.D}}x
+              </div>
             </div>
 
             <div class="panel-footer">
-              <button class="btn btn-success" ng-show="volgendeVraagButton" ng-click="volgendeVraag()">Start volgende vraag</button>
+              <button class="btn btn-success" ng-disabled="!volgendeVraagButton" ng-click="volgendeVraag()">Start volgende vraag</button>
             </div>
           </div>
       </div>

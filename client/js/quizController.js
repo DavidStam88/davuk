@@ -8,7 +8,7 @@ var quizController = function ($scope, socket) {
 	$scope.spelers = [];
 	$scope.view = '';
 	$scope.antwoord = '';
-	var geantwoord = false;
+	$scope.geantwoord = false;
 	var nieuweScore = 0;
 	$scope.speler = {};
 	$scope.speler.naam = '';
@@ -24,9 +24,9 @@ var quizController = function ($scope, socket) {
 	}
 
 	$scope.geefAntwoord = function (antwoord) {
-		if (!geantwoord) {
+		if (!$scope.geantwoord) {
 			socket.emit('antwoord', antwoord);
-			geantwoord = true;
+			$scope.geantwoord = true;
 			$scope.message = "Je antwoord is opgeslagen.";
 			$scope.error = '';
 		} else {
@@ -54,7 +54,7 @@ var quizController = function ($scope, socket) {
 			$scope.vraag = res.data;
 			$scope.speler.score = nieuweScore;
 			$scope.view = 'quiz';
-			geantwoord = false;
+			$scope.geantwoord = false;
 		} else {
 			$scope.view = '';
 			$scope.message = "";
